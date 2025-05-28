@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
+
 import {
   Outlet,
   RouterProvider,
@@ -8,25 +9,18 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import TanStackQueryDemo from './routes/demo.tanstack-query.tsx'
 import createAuthRoutes from './routes/auth.routes'
 import createDashboardRoutes from './routes/dashboard.routes'
-
-import Header from './components/Header.tsx'
-
 import TanStackQueryLayout from './integrations/tanstack-query/layout.tsx'
-
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
 
-import './styles.css'
+import './styles/styles.css'
 import reportWebVitals from './reportWebVitals.ts'
-
-import App from './App.tsx'
+import App from './pages/App/App.tsx'
 
 const rootRoute = createRootRoute({
   component: () => (
     <>
-      <Header />
       <Outlet />
       <TanStackRouterDevtools />
       <TanStackQueryLayout />
@@ -38,10 +32,6 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: () => {
-    // This is the main entry point of the application.
-    // When user not logged in, they will be redirected to the login page. /auth/login
-    // When user logged in, they will be redirected to the dashboard page. /dashboard/
-
     return <App />
   },
 })
