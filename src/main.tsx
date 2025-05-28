@@ -9,6 +9,8 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import TanStackQueryDemo from './routes/demo.tanstack-query.tsx'
+import createAuthRoutes from './routes/auth.routes'
+import createDashboardRoutes from './routes/dashboard.routes'
 
 import Header from './components/Header.tsx'
 
@@ -27,7 +29,6 @@ const rootRoute = createRootRoute({
       <Header />
       <Outlet />
       <TanStackRouterDevtools />
-
       <TanStackQueryLayout />
     </>
   ),
@@ -36,12 +37,19 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: App,
+  component: () => {
+    // This is the main entry point of the application.
+    // When user not logged in, they will be redirected to the login page. /auth/login
+    // When user logged in, they will be redirected to the dashboard page. /dashboard/
+
+    return <App />
+  },
 })
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  TanStackQueryDemo(rootRoute),
+  createAuthRoutes(rootRoute),
+  createDashboardRoutes(rootRoute),
 ])
 
 const router = createRouter({
