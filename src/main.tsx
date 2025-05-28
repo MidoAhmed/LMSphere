@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 
+import { Auth0Provider } from '@auth0/auth0-react'
 import {
   Outlet,
   RouterProvider,
@@ -9,14 +10,13 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import createAuthRoutes from './routes/auth.routes'
-import createDashboardRoutes from './routes/dashboard.routes'
+import createRoutes from './routes/routes.tsx'
 import TanStackQueryLayout from './integrations/tanstack-query/layout.tsx'
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx'
-
 import './styles/styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import App from './pages/App/App.tsx'
+import { getAuth0Config } from '@/config/authConfig'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -38,8 +38,7 @@ const indexRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  createAuthRoutes(rootRoute),
-  createDashboardRoutes(rootRoute),
+  createRoutes(rootRoute),
 ])
 
 const router = createRouter({
@@ -59,13 +58,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Please see https://auth0.github.io/auth0-react/interfaces/Auth0ProviderOptions.html
+// for a full list of the available properties on the provider
+const config = getAuth0Config()
+
+const auth0ProviderConfig = {
+  domain: config.domain,
+  clientId: config.clientId,
+  onRedirectCallback: (appState: any) => {
+    // Use the appState to redirect the user after login
+    router.navigate({
+      to: (appState && appState.returnTo) || window.location.pathname
+    });
+  },
+  authorizationParams: {
+    redirect_uri: window.location.origin,
+    ...(config.audience ? { audience: config.audience } : null),
+  },
+}
+
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
       <TanStackQueryProvider.Provider>
-        <RouterProvider router={router} />
+        <Auth0Provider {...auth0ProviderConfig}>
+          <RouterProvider router={router} />
+        </Auth0Provider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,
   )

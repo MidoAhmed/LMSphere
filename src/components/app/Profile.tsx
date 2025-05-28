@@ -20,14 +20,17 @@ interface Profile01Props {
   role: string
   avatar: string
   subscription?: string
+  onLogout: () => void
 }
 
 const defaultProfile = {
   name: 'Eugene An',
   role: 'Prompt Engineer',
-  avatar:
-    'https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png',
+  avatar: 'https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png',
   subscription: 'Free Trial',
+  onLogout: function (): void {
+    throw new Error('Function not implemented.')
+  }
 } satisfies Required<Profile01Props>
 
 const Profile = ({
@@ -35,8 +38,9 @@ const Profile = ({
   role = defaultProfile.role,
   avatar = defaultProfile.avatar,
   subscription = defaultProfile.subscription,
+  onLogout,
 }: Partial<Profile01Props> = defaultProfile) => {
-  const menuItems: MenuItem[] = [
+  const menuItems: Array<MenuItem> = [
     {
       label: 'Subscription',
       value: subscription,
@@ -113,6 +117,7 @@ const Profile = ({
               className="w-full flex items-center justify-between p-2 
                                 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
                                 rounded-lg transition-colors duration-200"
+              onClick={onLogout}
             >
               <div className="flex items-center gap-2">
                 <LogOut className="w-4 h-4" />

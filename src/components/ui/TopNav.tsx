@@ -16,8 +16,8 @@ interface BreadcrumbItem {
   href?: string
 }
 
-const TopNav = () => {
-  const breadcrumbs: BreadcrumbItem[] = [
+const TopNav = ({ onLogout }: { onLogout: () => void }) => {
+  const breadcrumbs: Array<BreadcrumbItem> = [
     { label: 'kokonutUI', href: '#' },
     { label: 'dashboard', href: '#' },
   ]
@@ -72,7 +72,10 @@ const TopNav = () => {
             sideOffset={8}
             className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
           >
-            <Profile avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png" />
+            <Profile
+              avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png"
+              onLogout={onLogout}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
