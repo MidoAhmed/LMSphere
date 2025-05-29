@@ -24,3 +24,10 @@ yarn-error.log*
 
 # Auth0 configuration file
 authConfig.json
+
+# Supabase volumes
+supabase/volumes/db/data
+supabase/volumes/storage
+supabase/.env
+supabase/test.http
+supabase/docker-compose.override.yml
