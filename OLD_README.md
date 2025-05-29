@@ -57,3 +57,22 @@ Objectifs: Architecture modulaire, Séparation du frontend et backend
     G --> H[Calcul de note]
     H --> I[Certification]
 ```
+
+## Tech
+
+🧱 Supabase Self-Hosted Containers: What They Do
+| Container | Purpose | Status |
+| ---------------- | ---------------------------------------------------------------------- | ------ |
+| `db` | PostgreSQL database with extensions | ✅ |
+| `auth` | GoTrue – authentication service (email/password, OAuth, etc.) | ✅ |
+| `rest` | PostgREST – auto-generated REST API for your tables | ✅ |
+| `studio` | Supabase Studio UI (Admin panel) | ✅ |
+| `kong` | API Gateway (handles routing, rate-limiting, etc.) | ✅ |
+| `meta` | Metadata sync service (keeps Postgres and Supabase components aligned) |✅ |
+| `realtime` | Realtime updates via WebSockets | |
+| `storage` | Supabase Storage – file/object storage | |
+| `analytics` | Usage metrics (can be disabled) | |
+| `imgproxy` | Image resizing and optimization for stored media | |
+| `edge-functions` | Supabase Functions (serverless backend logic) | |
+| `pooler` | Connection pooler (pgbouncer) | |
+| `vector` | (Optional) pgvector support for AI/embedding searches | |
