@@ -1,47 +1,44 @@
 # Top-level Makefile for full-stack project
 
 # Config
-COMPOSE=docker-compose
-BACKEND_PATH=./supabase
-DOCKER_FILE=-f $(BACKEND_PATH)/docker-compose.yml
+project_id ?= "LMSphere"
+db_container_name ?= "supabase_db_$(project_id)"
 
 # --------------------------- SUPABASE BACKEND ---------------------------
-start-backend:
-	@echo "Starting Supabase backend..."
-	$(COMPOSE) $(DOCKER_FILE) up -d
+start-stack:
+	@echo "Starting Supabase local development stack..."
+	yarn supabase start
 
-stop-backend:
-	@echo "Stopping Supabase backend..."
-	$(COMPOSE) $(DOCKER_FILE) down
+stop-stack:
+	@echo "Stopping Supabase local development stack..."
+	yarn supabase stop
 
-restart-backend:
-	@echo "Restarting Supabase backend..."
-	$(MAKE) stop-backend
-	$(MAKE) start-backend
+logs-stack:
+	@echo "Tailing Supabase local development stack logs..."
 
-logs-backend:
-	@echo "Tailing Supabase backend logs..."
-	$(COMPOSE) $(DOCKER_FILE) logs -f
-
-ps-backend:
+ps-stack:
 	@echo "Listing running containers..."
-	$(COMPOSE) $(DOCKER_FILE) ps
+	docker ps
+
+status:
+	@echo "Checking Supabase local development stack status..."
+	yarn supabase status
 
 psql:
 	@echo "Opening Postgres shell..."
-	docker exec -it supabase-db psql -U postgres -d postgres
+	docker exec -it $(db_container_name) psql -U postgres -d postgres
 
 migrate:
 	@echo "Running database migrations..."
 	# Placeholder for migration scripts
 
-clean:
-	@echo "Stopping and removing containers and volumes..."
-	$(COMPOSE) $(DOCKER_FILE) down -v --remove-orphans
+reset-db:
+	@echo "Resetting the local database to a clean state..."
+	yarn supabase db reset
 
 studio:
 	@echo "Opening Supabase Studio..."
-	open http://localhost:8000
+	open http://localhost:54323
 
 
 
@@ -65,15 +62,15 @@ help:
 	@echo "🛠 Available make commands:"
 	@echo ""
 	@echo "Backend:"
-	@echo "  make start-backend     - Start Supabase backend"
-	@echo "  make stop-backend      - Stop backend"
-	@echo "  make restart-backend   - Restart backend"
-	@echo "  make ps-backend        - List running containers"
-	@echo "  make logs-backend      - Tail logs"
-	@echo "  make psql              - Open Postgres shell"
-	@echo "  make clean             - Stop + remove volumes"
-	@echo "  make migrate           - Run database migrations"
-	@echo "  make studio            - Open Supabase Studio"
+	@echo "  make start-stack     - Start Supabase local development stack"
+	@echo "  make stop-stack      - Stop local development stack"
+	@echo "  make status          - Check local development stack status"
+	@echo "  make ps-stack        - List running containers"
+	@echo "  make logs-stack      - Tail logs"
+	@echo "  make psql            - Open Postgres shell"
+	@echo "  make reset-db       - Reset the local database to a clean state"
+	@echo "  make migrate         - Run database migrations"
+	@echo "  make studio          - Open Supabase Studio"
 	@echo ""
 	@echo "Frontend:"
 	@echo "  make start-frontend    - Start React dev server"
